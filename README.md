@@ -41,6 +41,15 @@ sudo thurang status
 sudo thurang down
 ```
 
+**Server in Docker (Linux hosts):** the image runs `thurang server up` with host networking, `NET_ADMIN` and `/dev/net/tun`; state lives in the `thurang-state` volume. See [`docker-compose.yml`](docker-compose.yml) for the forwarding sysctl note.
+
+```bash
+docker compose build
+docker compose run --rm thurang server init --exit-node --dns 1.1.1.1
+docker compose up -d
+docker compose exec thurang thurang otp
+```
+
 **Managing peers (on the server):** `thurang peers`, `thurang revoke <name>`, `thurang server show`, `thurang server stop`.
 
 **Unpairing / cleanup:** stop the server or client first, then:

@@ -1,0 +1,9 @@
+target
+.git
+.github
+tests
+*.md
+!README.md
+Dockerfile
+docker-compose.yml
+.dockerignore

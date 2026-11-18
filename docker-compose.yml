@@ -1,0 +1,31 @@
+# thurang server (exit node / subnet router) in a container. Linux hosts only.
+#
+#   docker compose build
+#   docker compose run --rm thurang server init --exit-node --dns 1.1.1.1
+#   docker compose up -d
+#   docker compose exec thurang thurang otp
+#
+# Host networking is required: the server NATs out of the host's interfaces,
+# advertises itself over mDNS and must be reachable on the LAN.
+#
+# Forwarding: Docker mounts /proc/sys read-only, so thurang cannot flip
+# net.ipv4.ip_forward itself. Enable it on the host once
+#   sudo sysctl -w net.ipv4.ip_forward=1   (persist in /etc/sysctl.d/)
+# or uncomment `privileged: true` below.
+services:
+  thurang:
+    build: .
+    image: thurang:latest
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    # privileged: true
+    volumes:
+      - thurang-state:/etc/thurang
+    restart: unless-stopped
+    stop_grace_period: 30s
+
+volumes:
+  thurang-state:
